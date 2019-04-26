@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>water-marker-demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html, body{
+            width: 100%;
+            height: 100%;
+        }
+        .water-marker-div{
+          background: red;
+          width: 50%;
+          height: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="water-marker-div"></div>
+</body>
+<script>
+    function componentUpdated(el, value) {
+      const opt = Object.assign({
+        width: 150,
+        height: 150,
+        textAlign: 'center',
+        textBaseline: 'middle',
+        font: '16px microsoft yahei',
+        fillStyle: 'rgba(184, 184, 184, 0.4)',
+        content: '请勿外传',
+        rotate: '-30',
+        zIndex: 1000,
+        visible: true,
+        offsetX: 0,
+        offsetY: 0,
+      }, {}, value)
+
+      const [watermarkDiv] = el.getElementsByClassName('water-marker-div')
+      const canvas = document.createElement('canvas')
+
+      canvas.setAttribute('width', opt.width)
+      canvas.setAttribute('height', opt.height)
+      const ctx = canvas.getContext('2d')
+
+      ctx.textAlign = opt.textAlign
+      ctx.textBaseline = opt.textBaseline
+      ctx.font = opt.font
+
+
+      ctx.fillStyle = opt.fillStyle
+      ctx.rotate(Math.PI / 180 * opt.rotate)
+
+      const texts = opt.content.split('\n')
+      texts.forEach((t, index) => {
+        let span
+        if (!span) {
+          span = document.createElement('span')
+          span.textContent = t || 'M'
+          span.style.margin = span.style.padding = '0 !important'
+          span.style.position = 'absolute !important'
+          span.style.left = '-99999px !important'
+          span.style.font = opt.font
+        }
+        document.body.appendChild(span)
+        const { height: lineHeight, width: textWidth } = span.getBoundingClientRect()
+        document.body.removeChild(span)
+        const top = (opt.height - lineHeight * texts.length) / 2
+        let left = opt.offsetX
+        if (opt.textAlign === 'center') {
+          left += parseFloat(opt.width) / 2
+        } else if (top.textAlign === 'left') {
+          left += (parseFloat(opt.width) - textWidth) / 2
+        } else if (top.textAlign === 'right') {
+          left += (parseFloat(opt.width) + textWidth) / 2
+        }
+        ctx.fillText(t, left, opt.offsetY + top + parseFloat(lineHeight) * (index + 1), parseFloat(opt.width))
+      })
+
+      const base64Url = canvas.toDataURL()
+      watermarkDiv.setAttribute('style', `
+        ${opt.visible ? 'opacity: 1;' : 'opacity: 0;'}
+        position:absolute;
+        top:0;
+        left:0;
+        // width:100%;
+        // height:100%;
+        z-index:${opt.zIndex};
+        pointer-events:none;
+        background-repeat:repeat;
+        background-image:url('${base64Url}')`)
+    };
+    componentUpdated(document.querySelector('body'))
+</script>
+</html>
