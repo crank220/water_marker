@@ -7,17 +7,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         *{
-            margin: 0;
-            padding: 0;
+          margin: 0;
+          padding: 0;
         }
         html, body{
-            width: 100%;
-            height: 100%;
+          width: 100%;
+          height: 100%;
         }
         .water-marker-div{
-          background: red;
-          width: 50%;
-          height: 50%;
+          background: #673ab7;
+          width: 1024px;
+          height: 512px;
         }
     </style>
 </head>
@@ -27,18 +27,18 @@
 <script>
     function componentUpdated(el, value) {
       const opt = Object.assign({
-        width: 150,
-        height: 150,
+        width: 333,
+        height: 222,
         textAlign: 'center',
         textBaseline: 'middle',
         font: '16px microsoft yahei',
         fillStyle: 'rgba(184, 184, 184, 0.4)',
-        content: '请勿外传',
+        content: 'crank@qq.com\n未经授权，请勿外传！\n' + new Date(),
         rotate: '-30',
         zIndex: 1000,
         visible: true,
-        offsetX: 0,
-        offsetY: 0,
+        offsetX: -77,
+        offsetY: 33,
       }, {}, value)
 
       const [watermarkDiv] = el.getElementsByClassName('water-marker-div')
